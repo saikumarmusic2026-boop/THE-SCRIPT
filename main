@@ -1,0 +1,39 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Unzip app
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem -Path . -Filter *.zip | Select-Object -First 1
+          Expand-Archive -Path $zip.FullName -DestinationPath app -Force
+          $pkg = Get-ChildItem -Path app -Recurse -Filter package.json | Where-Object { $_.FullName -notmatch 'node_modules' } | Select-Object -First 1
+          $rel = (Resolve-Path -Relative $pkg.DirectoryName).Replace('\','/')
+          "APP_DIR=$rel" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Install
+        working-directory: ${{ env.APP_DIR }}
+        run: npm install
+
+      - name: Build exe
+        working-directory: ${{ env.APP_DIR }}
+        run: npx electron-builder --win --publish never
+
+      - name: Upload exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenplay-windows-exe
+          path: ${{ env.APP_DIR }}/dist/*.exe
