@@ -1,0 +1,18 @@
+name: Unpack project zip
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip
+        run: unzip -o screenplay-desktop.zip -x ".github/*" "node_modules/*"
+      - name: Save the files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Unpack project" || echo "nothing to commit"
+          git push
