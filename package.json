@@ -1,0 +1,65 @@
+{
+  "name": "script-screenplay-editor",
+  "productName": "THE SCRIPT",
+  "version": "1.0.0",
+  "description": "Screenplay editor with outline bar, storyboard and PDF export",
+  "main": "main.js",
+  "author": "THE SCRIPT",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "node scripts/get-pdf-engine.js",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "app.script.screenplay",
+    "productName": "THE SCRIPT",
+    "files": [
+      "main.js",
+      "app/**/*"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Office",
+      "icon": "build/icon.png"
+    },
+    "fileAssociations": [
+      {
+        "ext": "thescript",
+        "name": "THE SCRIPT project",
+        "description": "THE SCRIPT project",
+        "role": "Editor"
+      }
+    ]
+  }
+}

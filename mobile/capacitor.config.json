@@ -1,0 +1,6 @@
+{
+  "appId": "app.thescript.mobile",
+  "appName": "THE SCRIPT",
+  "webDir": "www",
+  "server": { "androidScheme": "https" }
+}
